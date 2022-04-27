@@ -1,0 +1,16 @@
+FROM node:14.16.0-alpine3.13
+
+RUN addgroup app && adduser -S -G app app
+RUN mkdir /app && chown app:app /app
+USER app
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . . 
+COPY --chown=app:app docker-entrypoint.sh ./
+COPY --chown=app:app wait-for ./
+
+EXPOSE 3001 
+
+CMD ["npm", "start"]
